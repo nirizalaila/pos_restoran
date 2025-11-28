@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'pages/login_screen.dart';
-// import 'pages/pos_screen.dart';
+import 'pages/pos_screen.dart';
 import 'services/AuthService.dart';
+import 'package:pos_restoran/providers/CartProvider.dart';
+import 'package:pos_restoran/services/ProductService.dart';
+import 'package:pos_restoran/services/SalesService.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
-        // 1. Inisialisasi AuthService dan cek status login saat app dimulai
         ChangeNotifierProvider(
           create: (_) => AuthService()..checkLoginStatus(),
+        ),
+
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+
+        ChangeNotifierProvider(create: (_) => ProductService()),
+
+        ProxyProvider2<AuthService, CartProvider, SalesService>(
+          update: (context, authService, cartProvider, previousSalesService) {
+            return SalesService(
+              Dio(),
+              const FlutterSecureStorage(),
+              cartProvider,
+            );
+          },
         ),
       ],
       child: const MyApp(),
@@ -30,28 +49,21 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // Set home ke AuthChecker untuk menentukan routing
       home: const AuthChecker(),
     );
   }
 }
 
-// Widget untuk mengarahkan pengguna ke Login atau Home (PoS)
 class AuthChecker extends StatelessWidget {
   const AuthChecker({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Ambil state isLoggedIn dari AuthService
     final authService = Provider.of<AuthService>(context);
 
     if (authService.isLoggedIn) {
-      // Jika sudah login, arahkan ke PoS Screen
-      return const Scaffold(
-        body: Center(child: Text('Welcome to Inventara PoS!')),
-      );
+      return const PoSScreen();
     } else {
-      // Jika belum login, arahkan ke Login Page
       return const LoginPage();
     }
   }

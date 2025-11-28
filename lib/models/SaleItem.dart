@@ -1,4 +1,4 @@
-import './Product.dart';
+import 'package:pos_restoran/models/Product.dart';
 
 class SaleItem {
   final int id;

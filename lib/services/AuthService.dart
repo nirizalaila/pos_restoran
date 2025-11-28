@@ -6,7 +6,7 @@ import '../models/user.dart';
 class AuthService with ChangeNotifier {
   final Dio _dio = Dio();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  final String _baseUrl = "http://10.0.2.2:8000/api"; // <-- SESUAIKAN IP
+  final String _baseUrl = "http://127.0.0.1:8000/api";
 
   static const String ACCESS_TOKEN_KEY = 'sanctum_token';
 
