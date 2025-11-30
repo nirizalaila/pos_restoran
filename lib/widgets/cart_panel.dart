@@ -59,9 +59,34 @@ class _CartPanelState extends State<CartPanel> {
                       title: Text(item.product.name,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text("Rp ${item.subtotal.toStringAsFixed(0)}"),
-                      trailing: Text("x${item.quantity}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18)),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle_outline),
+                            onPressed: () =>
+                                cart.updateQuantity(item,item.quantity - 1),
+                          ),
+                          Text(
+                            "${item.quantity}",
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add_circle_outline),
+                            onPressed: () => cart.updateQuantity(item, item.quantity + 1),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.dialpad), // tombol kalkulator
+                            onPressed: () async {
+                              final newQty = await showDialog(
+                                context: context,
+                                builder: (_) => QtyCalculatorDialog(initialQty: item.quantity),
+                              );
+                              if (newQty != null) cart.updateQuantity(item, newQty);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

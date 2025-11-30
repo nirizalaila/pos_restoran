@@ -24,11 +24,23 @@ class PoSScreen extends StatelessWidget {
 
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: TextButton(
-              onPressed: () =>
-                  Provider.of<AuthService>(context, listen: false).logout(),
-              child: const Text("Logout",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              icon: const Text(
+                "Logout",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              onPressed: () {
+                Provider.of<AuthService>(context, listen: false).logout();
+              },
             ),
           ),
         ],
