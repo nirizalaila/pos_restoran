@@ -15,13 +15,13 @@ class MenuPanel extends StatelessWidget {
         }
 
         return GridView.builder(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(16),
           itemCount: service.products.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 1,
+            crossAxisSpacing: 14,
+            mainAxisSpacing: 14,
+            childAspectRatio: 0.92,
           ),
           itemBuilder: (context, index) {
             final product = service.products[index];
@@ -29,17 +29,33 @@ class MenuPanel extends StatelessWidget {
 
             return InkWell(
               onTap: () => cart.addItem(product),
-              child: Card(
-                elevation: 2,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(product.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      product.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
                     const SizedBox(height: 6),
-                    Text("Rp ${product.salePrice.toStringAsFixed(0)}",
-                        style: const TextStyle(color: Colors.grey)),
+                    Text(
+                      "Rp ${product.salePrice.toStringAsFixed(0)}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade700,
+                      ),
+                    ),
                   ],
                 ),
               ),

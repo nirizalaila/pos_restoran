@@ -11,7 +11,6 @@ class ProductService with ChangeNotifier {
 
   List<Product> _products = [];
   bool _isLoading = false;
-
   bool get isLoading => _isLoading;
   List<Product> get products => _products;
 

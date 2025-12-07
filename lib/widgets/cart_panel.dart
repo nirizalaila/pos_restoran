@@ -23,17 +23,40 @@ class _CartPanelState extends State<CartPanel> {
 
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          child: const Text("Order Details",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                )
+              ],
+            ),
+            child: const Text(
+              "Order Details",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF334B76),
+              ),
+            ),
+          ),
         ),
-
         Expanded(
           child: Consumer<CartProvider>(
             builder: (context, cart, child) {
               if (cart.items.isEmpty) {
-                return const Center(child: Text("Belum ada pesanan."));
+                return const Center(
+                  child: Text("Belum ada pesanan.",
+                      style: TextStyle(color: Colors.grey)),
+                );
               }
 
               return ListView.builder(
@@ -42,45 +65,54 @@ class _CartPanelState extends State<CartPanel> {
                   final item = cart.items[index];
 
                   return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 6),
                     child: ListTile(
                       onTap: () async {
                         final newQty = await showDialog(
                           context: context,
-                          builder: (_) => QtyCalculatorDialog(
-                            initialQty: item.quantity,
-                          ),
+                          builder: (_) =>
+                              QtyCalculatorDialog(initialQty: item.quantity),
                         );
 
                         if (newQty != null) {
                           cart.updateQuantity(item, newQty);
                         }
                       },
-                      title: Text(item.product.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text("Rp ${item.subtotal.toStringAsFixed(0)}"),
+                      title: Text(
+                        item.product.name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      subtitle: Text(
+                        "Rp ${item.subtotal.toStringAsFixed(0)}",
+                        style: TextStyle(color: Colors.green.shade700),
+                      ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.remove_circle_outline),
-                            onPressed: () =>
-                                cart.updateQuantity(item,item.quantity - 1),
+                            onPressed: () => cart.updateQuantity(
+                                item, item.quantity - 1),
                           ),
                           Text(
                             "${item.quantity}",
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                           IconButton(
                             icon: const Icon(Icons.add_circle_outline),
-                            onPressed: () => cart.updateQuantity(item, item.quantity + 1),
+                            onPressed: () => cart.updateQuantity(
+                                item, item.quantity + 1),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.dialpad), // tombol kalkulator
+                            icon: const Icon(Icons.dialpad),
                             onPressed: () async {
                               final newQty = await showDialog(
                                 context: context,
-                                builder: (_) => QtyCalculatorDialog(initialQty: item.quantity),
+                                builder: (_) =>
+                                    QtyCalculatorDialog(initialQty: item.quantity),
                               );
                               if (newQty != null) cart.updateQuantity(item, newQty);
                             },
@@ -96,7 +128,8 @@ class _CartPanelState extends State<CartPanel> {
         ),
 
         Consumer<CartProvider>(
-          builder: (context, cart, child) => checkoutSection(context, cart, locationId),
+          builder: (context, cart, child) =>
+              checkoutSection(context, cart, locationId),
         ),
       ],
     );
@@ -106,29 +139,53 @@ class _CartPanelState extends State<CartPanel> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.grey.shade300)),
-        color: Colors.grey[100],
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(14),
+          topRight: Radius.circular(14),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Total:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              Text("Rp ${cart.totalAmount.toStringAsFixed(0)}",
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Text(
+                "Total:",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF334B76),
+                ),
+              ),
+              Text(
+                "Rp ${cart.totalAmount.toStringAsFixed(0)}",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF334B76),
+                ),
+              ),
             ],
           ),
+
           const SizedBox(height: 12),
 
           ElevatedButton(
-            onPressed: cart.items.isEmpty || _isCheckingOut
+            onPressed: cart.items.isEmpty
                 ? null
                 : () async {
               final paymentInfo = await showDialog(
                 context: context,
-                builder: (_) => PaymentDialog(total: cart.totalAmount),
+                builder: (_) =>
+                    PaymentDialog(total: cart.totalAmount),
               );
 
               if (paymentInfo == null) return;
@@ -136,8 +193,11 @@ class _CartPanelState extends State<CartPanel> {
               setState(() => _isCheckingOut = true);
 
               try {
-                await Provider.of<SalesService>(context, listen: false).checkout(
-                  invoiceNumber: DateTime.now().millisecondsSinceEpoch.toString(),
+                await Provider.of<SalesService>(context, listen: false)
+                    .checkout(
+                  invoiceNumber: DateTime.now()
+                      .millisecondsSinceEpoch
+                      .toString(),
                   locationId: locationId,
                   method: paymentInfo["method"],
                   paymentCode: paymentInfo["code"],
@@ -145,31 +205,36 @@ class _CartPanelState extends State<CartPanel> {
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                      backgroundColor: Colors.green,
-                      content: Text("Transaksi berhasil!")),
+                    backgroundColor: Colors.green,
+                    content: Text("Transaksi berhasil!"),
+                  ),
                 );
 
                 cart.clearCart();
-              }
-              catch (e) {
+              } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.red,
                     content: Text("Error: $e"),
                   ),
                 );
-              }
-              finally {
+              } finally {
                 setState(() => _isCheckingOut = false);
               }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               minimumSize: const Size.fromHeight(55),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             child: _isCheckingOut
                 ? const CircularProgressIndicator(color: Colors.white)
-                : const Text("Payment", style: TextStyle(fontSize: 18)),
+                : const Text(
+              "Payment",
+              style: TextStyle(fontSize: 18),
+            ),
           ),
         ],
       ),

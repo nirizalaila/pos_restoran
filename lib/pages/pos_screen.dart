@@ -14,34 +14,16 @@ class PoSScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Inventara F&B PoS", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.indigo,
+        title: const Text(
+          "Inventara F&B PoS",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: const Color(0xFF334B76),
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.history, color: Colors.white),
             onPressed: () {},
-          ),
-
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: IconButton(
-              icon: const Text(
-                "Logout",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              onPressed: () {
-                Provider.of<AuthService>(context, listen: false).logout();
-              },
-            ),
           ),
         ],
       ),

@@ -5,10 +5,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'pages/login_screen.dart';
 import 'pages/pos_screen.dart';
+//import 'pages/sales_history_screen.dart';
+import 'pages/home_screen.dart';
+
 import 'services/AuthService.dart';
-import 'package:pos_restoran/providers/CartProvider.dart';
-import 'package:pos_restoran/services/ProductService.dart';
-import 'package:pos_restoran/services/SalesService.dart';
+import 'providers/CartProvider.dart';
+import 'services/ProductService.dart';
+import 'services/SalesService.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +52,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+
+      // REGISTER ROUTES
+      routes: {
+        '/pos': (context) => const PoSScreen(),
+       // '/sales-history': (context) => const SalesHistoryScreen(),
+        '/home': (context) => const HomeScreen(),
+      },
+
       home: const AuthChecker(),
     );
   }
@@ -62,7 +73,7 @@ class AuthChecker extends StatelessWidget {
     final authService = Provider.of<AuthService>(context);
 
     if (authService.isLoggedIn) {
-      return const PoSScreen();
+      return const HomeScreen();
     } else {
       return const LoginPage();
     }

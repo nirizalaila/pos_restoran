@@ -1,121 +1,131 @@
 import 'package:flutter/material.dart';
 
-class CalculatorPad extends StatefulWidget {
-  final int initialValue;
-  final Function(int) onSubmit;
+class QtyCalculatorDialog extends StatefulWidget {
+  final int initialQty;
 
-  const CalculatorPad({
-    super.key,
-    required this.initialValue,
-    required this.onSubmit,
-  });
+  const QtyCalculatorDialog({super.key, required this.initialQty});
 
   @override
-  State<CalculatorPad> createState() => _CalculatorPadState();
+  State<QtyCalculatorDialog> createState() => _QtyCalculatorDialogState();
 }
 
-class _CalculatorPadState extends State<CalculatorPad> {
-  late String value;
+class _QtyCalculatorDialogState extends State<QtyCalculatorDialog> {
+  String value = "";
 
   @override
   void initState() {
     super.initState();
-    value = widget.initialValue.toString();
+    value = widget.initialQty.toString();
   }
 
   void input(String v) {
-    setState(() => value += v);
-  }
-
-  void clear() => setState(() => value = "");
-
-  void backspace() {
-    if (value.isEmpty) return;
-    setState(() => value = value.substring(0, value.length - 1));
+    setState(() {
+      if (v == "C") {
+        value = "";
+      } else {
+        value += v;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Display
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          alignment: Alignment.centerRight,
-          child: Text(
-            value.isEmpty ? "0" : value,
-            style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-          ),
-        ),
-
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: 3,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 1.2,
-            padding: const EdgeInsets.all(12),
-            children: [
-              calcButton("1"), calcButton("2"), calcButton("3"),
-              calcButton("4"), calcButton("5"), calcButton("6"),
-              calcButton("7"), calcButton("8"), calcButton("9"),
-
-              controlButton("C", clear, Colors.orange),
-              calcButton("0"),
-              controlButton("⌫", backspace, Colors.orange),
-            ],
-          ),
-        ),
-
-        SizedBox(
-          height: 56,
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // HEADER
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: Color(0xFF334B76),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            child: const Text(
+              "Ubah Jumlah",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            onPressed: () {
-              widget.onSubmit(int.tryParse(value) ?? 0);
-              Navigator.pop(context);
-            },
-            child: const Text(
-              "OK",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+
+          const SizedBox(height: 12),
+
+          // DISPLAY
+          Text(
+            value.isEmpty ? "0" : value,
+            style: const TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
-      ],
+
+          const SizedBox(height: 12),
+
+          // KEYPAD GRID
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: GridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              children: [
+                ...["1","2","3","4","5","6","7","8","9"]
+                    .map((e) => calcButton(e)),
+                calcButton("C", color: Colors.red.shade500),
+                calcButton("0"),
+                confirmButton(),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
-  Widget calcButton(String text) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.grey[200],
-        foregroundColor: Colors.black,
-        shape: RoundedRectangleBorder(
+  Widget calcButton(String label, {Color? color}) {
+    return InkWell(
+      onTap: () => input(label),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: color ?? Colors.grey.shade200,
           borderRadius: BorderRadius.circular(12),
         ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: color != null ? Colors.white : Colors.black87,
+          ),
+        ),
       ),
-      onPressed: () => input(text),
-      child: Text(text, style: const TextStyle(fontSize: 24)),
     );
   }
 
-  Widget controlButton(String text, VoidCallback onTap, Color color) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
+  Widget confirmButton() {
+    return InkWell(
+      onTap: () {
+        final qty = int.tryParse(value);
+        Navigator.pop(context, qty ?? 0);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF334B76),
           borderRadius: BorderRadius.circular(12),
         ),
+        alignment: Alignment.center,
+        child: const Icon(Icons.check, color: Colors.white, size: 28),
       ),
-      onPressed: onTap,
-      child: Text(text, style: const TextStyle(fontSize: 24)),
     );
   }
 }

@@ -37,16 +37,14 @@ class CartProvider with ChangeNotifier {
   }
 
   List<Map<String, dynamic>> get salePayloadItems {
-    return _items
-        .map(
-          (item) => {
-            'product_id': item.product.id,
-            'quantity': item.quantity,
-            'unit_price': item.product.salePrice,
-            'subtotal': item.subtotal,
-          },
-        )
-        .toList();
+    return _items.map((item) {
+      return {
+        "product_id": item.product.id,
+        "quantity": item.quantity,
+        "price_at_sale": item.product.salePrice,
+        "subtotal": item.subtotal,
+      };
+    }).toList();
   }
 
   void clearCart() {

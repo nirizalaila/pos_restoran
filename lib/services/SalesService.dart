@@ -7,23 +7,32 @@ class SalesService {
   final Dio _dio;
   final FlutterSecureStorage _storage;
   final CartProvider _cartProvider;
+
   final String _baseUrl = "http://127.0.0.1:8000/api";
 
-  SalesService(this._dio, this._storage, this._cartProvider);
+  SalesService(
+      this._dio,
+      this._storage,
+      this._cartProvider,
+      );
 
   Future<String> _getAuthToken() async {
-    final token = await _storage.read(key: AuthService.ACCESS_TOKEN_KEY);
+    final token =
+    await _storage.read(key: AuthService.ACCESS_TOKEN_KEY);
+
     if (token == null) {
       throw Exception('Sesi telah berakhir. Mohon login ulang.');
     }
+
     return token;
   }
 
   Future<String> checkout({
     required String invoiceNumber,
     required int locationId,
-    required String method,        // ✅ Tambahan
-    required String? paymentCode,  // ✅ Tambahan
+    required String method,
+    required String? paymentCode,
+    String? buyerName,
   }) async {
     if (_cartProvider.items.isEmpty) {
       throw Exception('Keranjang belanja masih kosong.');
@@ -35,8 +44,9 @@ class SalesService {
       final payload = {
         'invoice_number': invoiceNumber,
         'location_id': locationId,
-        'payment_method': method,     // ⬅ kirim ke backend
-        'payment_code': paymentCode,  // ⬅ kirim ke backend
+        'payment_method': method,
+        'payment_code': paymentCode,
+        'buyer_name': buyerName,
         'total_amount': _cartProvider.totalAmount,
         'items': _cartProvider.salePayloadItems,
       };
@@ -52,17 +62,17 @@ class SalesService {
         ),
       );
 
-      if (response.statusCode == 201 && response.data['status'] == 'success') {
-        final message = response.data['message'];
+      if (response.statusCode == 201) {
         _cartProvider.clearCart();
-        return message;
+        return "Transaksi berhasil";
       }
-    } on DioException catch (e) {
-      final errorMessage =
-          e.response?.data['message'] ?? 'Transaksi gagal (Cek Stok/Log DB).';
-      throw Exception(errorMessage);
-    }
 
-    return "Transaksi gagal: Respon tidak valid.";
+      return "Transaksi gagal: Respon tidak valid.";
+    } on DioException catch (e) {
+      final msg = e.response?.data['error'] ??
+          e.response?.data['message'] ??
+          "Transaksi gagal.";
+      throw Exception(msg);
+    }
   }
 }
