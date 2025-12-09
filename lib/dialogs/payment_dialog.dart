@@ -10,80 +10,183 @@ class PaymentDialog extends StatefulWidget {
 }
 
 class _PaymentDialogState extends State<PaymentDialog> {
-  String method = "cash";
-  final TextEditingController codeCtrl = TextEditingController();
+  String _selectedMethod = 'cash';
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        width: 400,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Payment",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 200, vertical: 80),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // HEADER
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: Color(0xFF334B76),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+            ),
+            child: const Text(
+              "Pembayaran",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
 
-            Text("Total: Rp ${widget.total.toStringAsFixed(0)}",
-                style:
-                const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
 
-            const SizedBox(height: 20),
-
-            // PAYMENT METHODS
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // TOTAL
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
               children: [
-                methodButton("cash", "Cash"),
-                methodButton("transfer", "Transfer"),
-                methodButton("qris", "QRIS"),
+                const Text(
+                  "Total yang harus dibayar",
+                  style: TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Rp ${widget.total.toStringAsFixed(0)}",
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF334B76),
+                  ),
+                ),
               ],
             ),
+          ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
-            TextField(
-              controller: codeCtrl,
-              decoration: const InputDecoration(
-                labelText: "Kode Pembayaran (optional)",
-                border: OutlineInputBorder(),
-              ),
+          // METODE PEMBAYARAN
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _methodButton(
+                    label: "Tunai",
+                    icon: Icons.payments,
+                    value: 'cash',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _methodButton(
+                    label: "Transfer",
+                    icon: Icons.account_balance,
+                    value: 'transfer',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _methodButton(
+                    label: "QRIS",
+                    icon: Icons.qr_code,
+                    value: 'qris',
+                  ),
+                ),
+              ],
             ),
+          ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, {
-                    "method": method,
-                    "code": codeCtrl.text,
-                  });
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child:
-                const Text("Bayar Sekarang", style: TextStyle(fontSize: 18)),
-              ),
-            )
-          ],
-        ),
+          // TOMBOL AKSI
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(48),
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text("Batal"),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop<Map<String, dynamic>>(context, {
+                        "method": _selectedMethod,
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      minimumSize: const Size.fromHeight(48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      "Bayar",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
 
-  Widget methodButton(String value, String label) {
-    final bool selected = method == value;
-    return ElevatedButton(
-      onPressed: () => setState(() => method = value),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: selected ? Colors.blue : Colors.grey[300],
-        foregroundColor: selected ? Colors.white : Colors.black,
+  Widget _methodButton({
+    required String label,
+    required IconData icon,
+    required String value,
+  }) {
+    final bool isSelected = _selectedMethod == value;
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedMethod = value;
+        });
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF334B76) : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF334B76) : Colors.grey.shade300,
+            width: 1.2,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 26,
+              color: isSelected ? Colors.white : Colors.black54,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? Colors.white : Colors.black87,
+              ),
+            ),
+          ],
+        ),
       ),
-      child: Text(label),
     );
   }
 }
