@@ -18,11 +18,10 @@ class _CartPanelState extends State<CartPanel> {
 
   @override
   Widget build(BuildContext context) {
-    const int locationId = 1; // fix sementara
+    const int locationId = 1;
 
     return Column(
       children: [
-        // HEADER "Order Details"
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
           child: Container(
@@ -176,7 +175,6 @@ class _CartPanelState extends State<CartPanel> {
           ),
           const Divider(height: 18),
 
-          // TOTAL
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

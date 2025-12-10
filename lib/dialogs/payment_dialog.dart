@@ -20,7 +20,6 @@ class _PaymentDialogState extends State<PaymentDialog> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // HEADER
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
@@ -41,7 +40,6 @@ class _PaymentDialogState extends State<PaymentDialog> {
 
           const SizedBox(height: 12),
 
-          // TOTAL
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
@@ -65,7 +63,6 @@ class _PaymentDialogState extends State<PaymentDialog> {
 
           const SizedBox(height: 16),
 
-          // METODE PEMBAYARAN
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -99,7 +96,6 @@ class _PaymentDialogState extends State<PaymentDialog> {
 
           const SizedBox(height: 20),
 
-          // TOMBOL AKSI
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Row(

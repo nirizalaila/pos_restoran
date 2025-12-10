@@ -35,7 +35,6 @@ class _QtyCalculatorDialogState extends State<QtyCalculatorDialog> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // HEADER
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
@@ -56,7 +55,6 @@ class _QtyCalculatorDialogState extends State<QtyCalculatorDialog> {
 
           const SizedBox(height: 12),
 
-          // DISPLAY
           Text(
             value.isEmpty ? "0" : value,
             style: const TextStyle(
@@ -67,7 +65,6 @@ class _QtyCalculatorDialogState extends State<QtyCalculatorDialog> {
 
           const SizedBox(height: 12),
 
-          // KEYPAD GRID
           Padding(
             padding: const EdgeInsets.all(16),
             child: GridView.count(

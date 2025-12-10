@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pos_restoran/pages/history_screen.dart';
+import 'package:pos_restoran/pages/stock_screen.dart';
 import 'package:provider/provider.dart';
 import '../services/AuthService.dart';
 import 'pos_screen.dart';
@@ -23,7 +25,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Daily Grocery Operations",
+                      "Daily Sales Operations",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
@@ -31,13 +33,6 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      "Pilih modul yang ingin kamu gunakan hari ini.",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF6B7280),
-                      ),
-                    ),
 
                     const SizedBox(height: 20),
                     Expanded(
@@ -68,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                               "icon": Icons.history,
                               "color": const Color(0xFFFFA726),
                               "page":
-                              const HomeScreen(), // TODO: ganti ke HistoryScreen
+                              const HistoryScreen(),
                             },
                             {
                               "title": "Stok",
@@ -77,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                               "icon": Icons.inventory_2_outlined,
                               "color": const Color(0xFF22C55E),
                               "page":
-                              const HomeScreen(), // TODO: ganti ke StockScreen
+                              const StockScreen(),
                             },
                           ];
 
@@ -126,7 +121,6 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Judul kiri
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -7,10 +7,6 @@ class SalesService {
   final Dio _dio;
   final FlutterSecureStorage _storage;
   final CartProvider _cartProvider;
-
-  // SESUAIKAN kalau pakai emulator/device:
-  // - Android emulator: http://10.0.2.2:8000/api
-  // - Device fisik: http://IP-LAPTOP:8000/api
   final String _baseUrl = "http://127.0.0.1:8000/api";
 
   SalesService(
@@ -29,10 +25,6 @@ class SalesService {
     return token;
   }
 
-  /// Checkout
-  /// - kirim transaksi ke /api/sales
-  /// - kalau sukses → clear cart
-  /// - return: data invoice (map) untuk ditampilkan di struk
   Future<Map<String, dynamic>> checkout({
     required String invoiceNumber,
     required int locationId,
@@ -72,10 +64,7 @@ class SalesService {
         final data = response.data as Map;
 
         if (data['success'] == true) {
-          // kosongkan keranjang
           _cartProvider.clearCart();
-
-          // kembalikan data invoice untuk ditampilkan
           final invoiceData =
           Map<String, dynamic>.from(data['data'] as Map<String, dynamic>);
 
@@ -106,8 +95,6 @@ class SalesService {
           msg = 'HTTP ${res.statusCode}: ${res.statusMessage ?? 'Error'}';
         }
 
-        // debug ke console
-        // ignore: avoid_print
         print('DioException response data: ${res.data}');
       } else {
         msg = e.message ?? msg;
@@ -118,4 +105,36 @@ class SalesService {
       throw Exception(e.toString());
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchSalesHistory() async {
+    final token = await _getAuthToken();
+
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/sales',
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data is Map) {
+        final data = response.data as Map<String, dynamic>;
+        final List<dynamic> rows = data['data'] ?? [];
+        return rows
+            .map((e) => Map<String, dynamic>.from(e as Map))
+            .toList();
+      }
+
+      throw Exception('Gagal memuat riwayat penjualan.');
+    } on DioException catch (e) {
+      final msg = e.response?.data.toString() ?? e.message ?? 'Error';
+      throw Exception('Gagal memuat riwayat: $msg');
+    } catch (e) {
+      throw Exception('Gagal memuat riwayat: $e');
+    }
+  }
+
 }

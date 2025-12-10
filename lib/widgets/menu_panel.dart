@@ -13,7 +13,7 @@ class MenuPanel extends StatefulWidget {
 
 class _MenuPanelState extends State<MenuPanel> {
   String _search = '';
-  String _activeFilter = 'all'; // buat future category, sekarang dummy
+  String _activeFilter = 'all';
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,6 @@ class _MenuPanelState extends State<MenuPanel> {
       padding: const EdgeInsets.fromLTRB(4, 8, 4, 4),
       child: Row(
         children: [
-          // search
           Expanded(
             child: TextField(
               decoration: InputDecoration(
@@ -108,7 +107,7 @@ class _MenuPanelState extends State<MenuPanel> {
             ),
           ),
           const SizedBox(width: 12),
-          // chip filter dummy (All)
+
           GestureDetector(
             onTap: () => setState(() => _activeFilter = 'all'),
             child: AnimatedContainer(
@@ -174,7 +173,6 @@ class _MenuPanelState extends State<MenuPanel> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // nama
             Text(
               product.name,
               maxLines: 2,
@@ -186,7 +184,6 @@ class _MenuPanelState extends State<MenuPanel> {
               ),
             ),
             const Spacer(),
-            // harga & qty badge
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

@@ -40,7 +40,6 @@ class InvoiceDialog extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // HEADER
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(14),
@@ -94,7 +93,6 @@ class InvoiceDialog extends StatelessWidget {
 
           const Divider(),
 
-          // ITEM LIST
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Column(
@@ -146,7 +144,6 @@ class InvoiceDialog extends StatelessWidget {
           const SizedBox(height: 8),
           const Divider(),
 
-          // TOTAL
           Padding(
             padding: const EdgeInsets.fromLTRB(18, 8, 18, 4),
             child: Row(
@@ -173,7 +170,6 @@ class InvoiceDialog extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          // FOOTER
           const Padding(
             padding: EdgeInsets.only(bottom: 4),
             child: Text(

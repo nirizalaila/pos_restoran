@@ -5,13 +5,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'pages/login_screen.dart';
 import 'pages/pos_screen.dart';
-//import 'pages/sales_history_screen.dart';
 import 'pages/home_screen.dart';
 
 import 'services/AuthService.dart';
 import 'providers/CartProvider.dart';
 import 'services/ProductService.dart';
 import 'services/SalesService.dart';
+import 'services/StockService.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +23,8 @@ void main() {
         ),
 
         ChangeNotifierProvider(create: (_) => CartProvider()),
-
         ChangeNotifierProvider(create: (_) => ProductService()),
+        ChangeNotifierProvider(create: (_) => StockService()),
 
         ProxyProvider2<AuthService, CartProvider, SalesService>(
           update: (context, authService, cartProvider, previousSalesService) {
@@ -47,16 +47,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Inventara F&B PoS',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
 
-      // REGISTER ROUTES
       routes: {
         '/pos': (context) => const PoSScreen(),
-       // '/sales-history': (context) => const SalesHistoryScreen(),
         '/home': (context) => const HomeScreen(),
       },
 

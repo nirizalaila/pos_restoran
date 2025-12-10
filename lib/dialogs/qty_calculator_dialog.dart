@@ -64,7 +64,6 @@ class _QtyCalculatorDialogState extends State<QtyCalculatorDialog> {
             ),
             const SizedBox(height: 15),
 
-            // DISPLAY MIRIP ODOO
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               width: double.infinity,
@@ -84,7 +83,6 @@ class _QtyCalculatorDialogState extends State<QtyCalculatorDialog> {
 
             const SizedBox(height: 20),
 
-            // KEYPAD
             Column(
               children: [
                 Row(children: [numButton("1"), numButton("2"), numButton("3")]),
@@ -109,7 +107,6 @@ class _QtyCalculatorDialogState extends State<QtyCalculatorDialog> {
                     ),
                     numButton("0"),
 
-                    // Backspace
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(4),
@@ -139,7 +136,6 @@ class _QtyCalculatorDialogState extends State<QtyCalculatorDialog> {
 
             const SizedBox(height: 20),
 
-            // OK BUTTON
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
