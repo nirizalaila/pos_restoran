@@ -1,4 +1,3 @@
-cart_panel (payment button style on pressed) 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/CartProvider.dart';
@@ -36,7 +35,7 @@ class _CartPanelState extends State<CartPanel> {
                   color: Colors.black.withOpacity(0.06),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
-                )
+                ),
               ],
             ),
             child: const Text(
@@ -69,10 +68,13 @@ class _CartPanelState extends State<CartPanel> {
 
                   return Card(
                     elevation: 1,
-                    margin:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: ListTile(
                       onTap: () async {
                         final newQty = await showDialog<int>(
@@ -102,13 +104,15 @@ class _CartPanelState extends State<CartPanel> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.remove_circle_outline),
-                            onPressed: () => cart.updateQuantity(
-                                item, item.quantity - 1),
+                            onPressed: () =>
+                                cart.updateQuantity(item, item.quantity - 1),
                           ),
                           Text(
                             "${item.quantity}",
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
                           IconButton(
                             icon: const Icon(Icons.add_circle_outline),
@@ -148,7 +152,10 @@ class _CartPanelState extends State<CartPanel> {
   }
 
   Widget checkoutSection(
-      BuildContext context, CartProvider cart, int locationId) {
+    BuildContext context,
+    CartProvider cart,
+    int locationId,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -182,16 +189,18 @@ class _CartPanelState extends State<CartPanel> {
               const Text(
                 "Total:",
                 style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF334B76)),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF334B76),
+                ),
               ),
               Text(
                 "Rp ${cart.totalAmount.toStringAsFixed(0)}",
                 style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF334B76)),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF334B76),
+                ),
               ),
             ],
           ),
@@ -202,58 +211,58 @@ class _CartPanelState extends State<CartPanel> {
             onPressed: cart.items.isEmpty
                 ? null
                 : () async {
-              final paymentInfo = await showDialog<Map<String, dynamic>>(
-                context: context,
-                builder: (_) => PaymentDialog(total: cart.totalAmount),
-              );
+                    final paymentInfo = await showDialog<Map<String, dynamic>>(
+                      context: context,
+                      builder: (_) => PaymentDialog(total: cart.totalAmount),
+                    );
 
-              if (paymentInfo == null) return;
+                    if (paymentInfo == null) return;
 
-              final String method = paymentInfo['method'];
+                    final String method = paymentInfo['method'];
 
-              setState(() => _isCheckingOut = true);
+                    setState(() => _isCheckingOut = true);
 
-              try {
-                final saleData =
-                await Provider.of<SalesService>(context,
-                    listen: false)
-                    .checkout(
-                  invoiceNumber: DateTime.now()
-                      .millisecondsSinceEpoch
-                      .toString(),
-                  locationId: locationId,
-                  method: method,
-                  paymentCode: null,
-                );
+                    try {
+                      final saleData =
+                          await Provider.of<SalesService>(
+                            context,
+                            listen: false,
+                          ).checkout(
+                            invoiceNumber: DateTime.now().millisecondsSinceEpoch
+                                .toString(),
+                            locationId: locationId,
+                            method: method,
+                            paymentCode: null,
+                          );
 
-                await showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) => InvoiceDialog(
-                    saleData: saleData,
-                    paymentMethod: method,
-                  ),
-                );
+                      await showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => InvoiceDialog(
+                          saleData: saleData,
+                          paymentMethod: method,
+                        ),
+                      );
 
-                cart.clearCart();
+                      cart.clearCart();
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    backgroundColor: Colors.green,
-                    content: Text("Transaksi berhasil"),
-                  ),
-                );
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.red,
-                    content: Text("Error: $e"),
-                  ),
-                );
-              } finally {
-                setState(() => _isCheckingOut = false);
-              }
-            },
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Text("Transaksi berhasil"),
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text("Error: $e"),
+                        ),
+                      );
+                    } finally {
+                      setState(() => _isCheckingOut = false);
+                    }
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               minimumSize: const Size.fromHeight(55),
@@ -264,13 +273,13 @@ class _CartPanelState extends State<CartPanel> {
             child: _isCheckingOut
                 ? const CircularProgressIndicator(color: Colors.white)
                 : const Text(
-              "Payment",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+                    "Payment",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
           ),
         ],
       ),
