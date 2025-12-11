@@ -9,6 +9,8 @@ class SalesService {
   final CartProvider _cartProvider;
   final String _baseUrl = "http://127.0.0.1:8000/api";
 
+  Map<String, dynamic>? lastSale;
+
   SalesService(
       this._dio,
       this._storage,
@@ -65,8 +67,10 @@ class SalesService {
 
         if (data['success'] == true) {
           _cartProvider.clearCart();
+
           final invoiceData =
           Map<String, dynamic>.from(data['data'] as Map<String, dynamic>);
+          lastSale = invoiceData;
 
           return invoiceData;
         }
@@ -136,5 +140,4 @@ class SalesService {
       throw Exception('Gagal memuat riwayat: $e');
     }
   }
-
 }
