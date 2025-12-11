@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../widgets/menu_panel.dart';
 import '../widgets/cart_panel.dart';
 import '../services/ProductService.dart';
+import '../services/SalesService.dart';
+import '../services/AuthService.dart';
+
+import '../dialogs/invoice_dialog.dart';
+import 'history_screen.dart'; // sesuaikan kalau path beda
 
 class PoSScreen extends StatelessWidget {
   const PoSScreen({super.key});
@@ -69,13 +75,15 @@ class PoSScreen extends StatelessWidget {
           bottom: Radius.circular(26),
         ),
       ),
-
       child: Row(
         children: [
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.white, size: 22),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+              size: 22,
+            ),
             tooltip: "Kembali",
           ),
           const SizedBox(width: 4),
@@ -96,7 +104,7 @@ class PoSScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 2),
                 Text(
-                  "Daily Grocery & Beverage Checkout",
+                  "Daily Sales",
                   style: TextStyle(
                     fontSize: 12,
                     color: Color(0xFFC5CCE4),
@@ -109,18 +117,24 @@ class PoSScreen extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.print_outlined,
-                    color: Colors.white, size: 24),
-                tooltip: "Print receipt",
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.history,
-                    color: Colors.white, size: 24),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const HistoryScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.history,
+                  color: Colors.white,
+                  size: 24,
+                ),
                 tooltip: "Riwayat",
               ),
+
               const SizedBox(width: 14),
+
               Container(
                 padding:
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -129,21 +143,30 @@ class PoSScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Row(
-                  children: const [
-                    CircleAvatar(
+                  children: [
+                    const CircleAvatar(
                       radius: 14,
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person,
-                          size: 18, color: Colors.black87),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      "Kasir 1",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
+                      child: Icon(
+                        Icons.person,
+                        size: 18,
+                        color: Colors.black87,
                       ),
+                    ),
+                    const SizedBox(width: 8),
+                    Consumer<AuthService>(
+                      builder: (_, auth, __) {
+                        final user = auth.currentUser;
+                        final name = (user?.name ?? 'Kasir');
+                        return Text(
+                          name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
