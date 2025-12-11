@@ -1,3 +1,4 @@
+cart_panel (payment button style on pressed) 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/CartProvider.dart';
@@ -264,7 +265,11 @@ class _CartPanelState extends State<CartPanel> {
                 ? const CircularProgressIndicator(color: Colors.white)
                 : const Text(
               "Payment",
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
