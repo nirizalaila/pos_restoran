@@ -7,15 +7,11 @@ class SalesService {
   final Dio _dio;
   final FlutterSecureStorage _storage;
   final CartProvider _cartProvider;
-  final String _baseUrl = "http://127.0.0.1:8000/api";
+  final String _baseUrl = "https://inventara.my.id/api";
 
   Map<String, dynamic>? lastSale;
 
-  SalesService(
-      this._dio,
-      this._storage,
-      this._cartProvider,
-      );
+  SalesService(this._dio, this._storage, this._cartProvider);
 
   Future<String> _getAuthToken() async {
     final token = await _storage.read(key: AuthService.ACCESS_TOKEN_KEY);
@@ -68,14 +64,16 @@ class SalesService {
         if (data['success'] == true) {
           _cartProvider.clearCart();
 
-          final invoiceData =
-          Map<String, dynamic>.from(data['data'] as Map<String, dynamic>);
+          final invoiceData = Map<String, dynamic>.from(
+            data['data'] as Map<String, dynamic>,
+          );
           lastSale = invoiceData;
 
           return invoiceData;
         }
 
-        final msg = data['error']?.toString() ??
+        final msg =
+            data['error']?.toString() ??
             data['message']?.toString() ??
             'Transaksi gagal.';
         throw Exception(msg);
@@ -90,9 +88,7 @@ class SalesService {
         final data = res.data;
 
         if (data is Map) {
-          msg = data['error']?.toString() ??
-              data['message']?.toString() ??
-              msg;
+          msg = data['error']?.toString() ?? data['message']?.toString() ?? msg;
         } else if (data is String) {
           msg = data;
         } else {
@@ -127,9 +123,7 @@ class SalesService {
       if (response.statusCode == 200 && response.data is Map) {
         final data = response.data as Map<String, dynamic>;
         final List<dynamic> rows = data['data'] ?? [];
-        return rows
-            .map((e) => Map<String, dynamic>.from(e as Map))
-            .toList();
+        return rows.map((e) => Map<String, dynamic>.from(e as Map)).toList();
       }
 
       throw Exception('Gagal memuat riwayat penjualan.');
