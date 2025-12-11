@@ -8,15 +8,26 @@ import '../services/SalesService.dart';
 import '../services/AuthService.dart';
 
 import '../dialogs/invoice_dialog.dart';
-import 'history_screen.dart'; // sesuaikan kalau path beda
+import 'history_screen.dart';
 
-class PoSScreen extends StatelessWidget {
+class PoSScreen extends StatefulWidget {
   const PoSScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Provider.of<ProductService>(context, listen: false).fetchProducts();
+  State<PoSScreen> createState() => _PoSScreenState();
+}
 
+class _PoSScreenState extends State<PoSScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProductService>(context, listen: false).fetchProducts();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F3F8),
       body: Column(
@@ -71,9 +82,7 @@ class PoSScreen extends StatelessWidget {
             offset: Offset(0, 4),
           ),
         ],
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(26),
-        ),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(26)),
       ),
       child: Row(
         children: [
@@ -105,10 +114,7 @@ class PoSScreen extends StatelessWidget {
                 SizedBox(height: 2),
                 Text(
                   "Daily Sales",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFC5CCE4),
-                  ),
+                  style: TextStyle(fontSize: 12, color: Color(0xFFC5CCE4)),
                 ),
               ],
             ),
@@ -120,24 +126,20 @@ class PoSScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const HistoryScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const HistoryScreen()),
                   );
                 },
-                icon: const Icon(
-                  Icons.history,
-                  color: Colors.white,
-                  size: 24,
-                ),
+                icon: const Icon(Icons.history, color: Colors.white, size: 24),
                 tooltip: "Riwayat",
               ),
 
               const SizedBox(width: 14),
 
               Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(30),

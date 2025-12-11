@@ -6,7 +6,7 @@ import 'package:pos_restoran/services/AuthService.dart';
 class StockService with ChangeNotifier {
   final Dio _dio = Dio();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  final String _baseUrl = "http://127.0.0.1:8000/api";
+  final String _baseUrl = "https://inventara.my.id/api";
 
   Future<String> _getAuthToken() async {
     final token = await _storage.read(key: AuthService.ACCESS_TOKEN_KEY);
@@ -46,9 +46,7 @@ class StockService with ChangeNotifier {
           rows = raw;
         }
 
-        return rows
-            .map((e) => Map<String, dynamic>.from(e as Map))
-            .toList();
+        return rows.map((e) => Map<String, dynamic>.from(e as Map)).toList();
       }
 
       throw Exception('Gagal memuat data stok.');
