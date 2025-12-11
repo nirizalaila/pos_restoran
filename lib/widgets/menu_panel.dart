@@ -11,9 +11,17 @@ class MenuPanel extends StatefulWidget {
   State<MenuPanel> createState() => _MenuPanelState();
 }
 
+
 class _MenuPanelState extends State<MenuPanel> {
   String _search = '';
   String _activeFilter = 'all';
+
+  final TextEditingController _searchController = TextEditingController();
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +95,7 @@ class _MenuPanelState extends State<MenuPanel> {
         children: [
           Expanded(
             child: TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: "Search menu...",
                 prefixIcon: const Icon(Icons.search, size: 20),
@@ -109,7 +118,15 @@ class _MenuPanelState extends State<MenuPanel> {
           const SizedBox(width: 12),
 
           GestureDetector(
-            onTap: () => setState(() => _activeFilter = 'all'),
+            onTap: () {
+              setState(() {
+                _activeFilter = 'all';
+                _search = '';                // ⬅️ reset search text
+                _searchController.clear();   // ⬅️ hapus text di TextField
+                FocusScope.of(context).unfocus(); // ⬅️ tutup keyboard
+              });
+            },
+
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               padding:
